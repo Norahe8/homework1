@@ -943,12 +943,24 @@ with tab3:
     st.markdown("<p style='color:#64748b;font-size:0.85rem;'>🟢 Green = best per metric &nbsp;|&nbsp; 🔴 Red = worst per metric</p>",
                 unsafe_allow_html=True)
     disp = metrics_df[METRIC_COLS].sort_values("AUC-ROC", ascending=False)
-    styled = disp.style \
-        .format("{:.4f}") \
-        .highlight_max(subset=METRIC_COLS, color="#1a3a2a") \
-        .highlight_min(subset=METRIC_COLS, color="#3a1a1a") \
-        .set_properties(**{"background-color": "#161b27", "color": "#e2e8f0",
-                           "border": "1px solid rgba(255,255,255,0.05)"})
+
+    def _color_table(df):
+        styles = pd.DataFrame(
+            "background-color:#161b27;color:#e2e8f0;border:1px solid rgba(255,255,255,0.05);",
+            index=df.index, columns=df.columns,
+        )
+        for col in df.columns:
+            styles.loc[df[col].idxmax(), col] = (
+                "background-color:#14532d;color:#4ade80;font-weight:700;"
+                "border:1px solid rgba(255,255,255,0.05);"
+            )
+            styles.loc[df[col].idxmin(), col] = (
+                "background-color:#450a0a;color:#f87171;font-weight:700;"
+                "border:1px solid rgba(255,255,255,0.05);"
+            )
+        return styles
+
+    styled = disp.style.format("{:.4f}").apply(_color_table, axis=None)
     st.dataframe(styled, use_container_width=True)
 
     st.markdown("---")
