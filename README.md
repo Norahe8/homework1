@@ -1,12 +1,13 @@
 # Telco Customer Churn Analytics
 
-An end-to-end machine learning project for predicting and explaining customer churn, featuring descriptive analytics, five predictive models with hyperparameter tuning, SHAP explainability, and an interactive Streamlit dashboard.
+An end-to-end machine learning project for predicting and explaining customer churn, featuring a professional dark-theme dashboard with business context, five predictive models with hyperparameter tuning, SHAP explainability, and actionable retention recommendations.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Dashboard](#dashboard)
 - [Dataset](#dataset)
 - [Features](#features)
 - [Project Structure](#project-structure)
@@ -24,7 +25,25 @@ Customer churn — when a customer stops doing business with a company — is on
 1. **Understand** churn patterns through descriptive analytics and visualizations
 2. **Predict** which customers are at risk using five different ML models
 3. **Explain** model decisions using SHAP (SHapley Additive exPlanations)
-4. **Deploy** an interactive dashboard where any customer profile can be evaluated in real time
+4. **Act** on predictions with risk-tiered retention recommendations
+5. **Present** findings through a business-ready portfolio dashboard
+
+---
+
+## Dashboard
+
+**Live app:** [homework1-wyu7nzfpsjq8hybmvdqm.streamlit.app](https://homework1-wyu7nzfpsjq8hybmvdqm.streamlit.app)
+
+The dashboard features a complete dark professional UI redesign built for portfolio and stakeholder presentations:
+
+- **Gradient hero header** with key project stats at a glance
+- **Business context cards** — "What is Customer Churn?" and "Why Does This Matter?" with real revenue impact figures
+- **Color-coded KPI cards** with accent borders per metric category
+- **Metrics comparison table** with green highlighting for best values and red for worst, per column
+- **"What Does Each Model Do?"** section explaining each algorithm in plain language
+- **Interactive gauge chart** showing churn probability with color-coded risk zones
+- **Risk-tiered recommendations** (Low / Moderate / High / Critical) with specific retention actions
+- **SHAP waterfall explanations** written accessibly for non-technical stakeholders
 
 ---
 
@@ -74,16 +93,17 @@ Each model reports: **Accuracy, Precision, Recall, F1, AUC-ROC**
 ### Explainability (SHAP)
 - SHAP beeswarm summary plot
 - SHAP mean absolute value bar plot
-- SHAP waterfall plot for a single prediction
+- SHAP waterfall plot for a single prediction with plain-language interpretation
 - Applied to the best-performing tree-based model (XGBoost)
 
 ### Streamlit App — 4 Tabs
+
 | Tab | Contents |
 |---|---|
-| Executive Summary | KPI cards, model leaderboard, key business insights |
-| Descriptive Analytics | All 8 interactive Plotly charts with written interpretations |
-| Model Performance | Metrics table, ROC curves, metric comparison bar chart, best hyperparameters, SHAP plots |
-| Interactive Prediction | Select model, adjust all 19 feature sliders/dropdowns, get live churn probability with gauge chart, and SHAP waterfall explanation |
+| **Executive Summary** | Business context cards, KPI cards, model leaderboard, key business insights |
+| **Descriptive Analytics** | 8 interactive dark-theme Plotly charts with written interpretations |
+| **Model Performance** | Color-coded metrics table, ROC curves, metric bar chart, best hyperparameters, SHAP plots with explanation |
+| **Interactive Prediction** | Customer profile builder, live churn probability gauge, risk badge, actionable retention recommendation, SHAP waterfall explanation |
 
 ---
 
@@ -95,7 +115,10 @@ homework1/
 ├── train_models.py                          # Full ML training pipeline
 ├── app.py                                   # Streamlit dashboard
 ├── requirements.txt                         # Python dependencies
-├── models/                                  # Saved model artifacts (generated)
+├── runtime.txt                              # Python version (3.11)
+├── .streamlit/
+│   └── config.toml                          # Dark theme configuration
+├── models/                                  # Saved model artifacts
 │   ├── logistic_regression.joblib
 │   ├── decision_tree.joblib
 │   ├── random_forest.joblib
@@ -107,7 +130,7 @@ homework1/
 │   ├── best_params.joblib
 │   ├── shap_explainer.joblib
 │   └── ...
-└── plots/                                   # Saved plot images (generated)
+└── plots/                                   # Saved plot images
     ├── 01_churn_distribution.png
     ├── 02_tenure_distribution.png
     ├── ...
