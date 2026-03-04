@@ -358,17 +358,28 @@ def compute_shap_waterfall(model, X_proc, feature_names, model_name, max_display
     apply_dark_mpl()
     explainer = shap.TreeExplainer(model)
     shap_vals = explainer.shap_values(X_proc)
+    ev_raw = explainer.expected_value
+
     if isinstance(shap_vals, list):
+        # Old SHAP format: list of arrays per class
         sv = shap_vals[1][0]
-        ev = explainer.expected_value[1]
+        ev = float(ev_raw[1])
+    elif shap_vals.ndim == 3:
+        # New SHAP format for multi-output RF/DT: (n_samples, n_features, n_classes)
+        sv = shap_vals[0, :, 1]
+        ev = float(ev_raw[1]) if hasattr(ev_raw, "__len__") else float(ev_raw)
+    elif shap_vals.ndim == 2 and shap_vals.shape[0] == len(feature_names):
+        # (n_features, n_classes) for a single sample — RF/DT in some SHAP versions
+        sv = shap_vals[:, 1]
+        ev = float(ev_raw[1]) if hasattr(ev_raw, "__len__") else float(ev_raw)
     else:
+        # Single-output (XGBoost binary): (n_samples, n_features)
         sv = shap_vals[0]
-        ev = (explainer.expected_value[1]
-              if isinstance(explainer.expected_value, (list, np.ndarray))
-              else explainer.expected_value)
+        ev = float(ev_raw[0]) if hasattr(ev_raw, "__len__") else float(ev_raw)
+
     exp = shap.Explanation(
         values=sv, base_values=ev,
-        data=X_proc.iloc[0].values, feature_names=feature_names,
+        data=X_proc.iloc[0].values, feature_names=list(feature_names),
     )
     plt.figure(figsize=(12, 7), facecolor="#161b27")
     shap.plots.waterfall(exp, max_display=max_display, show=False)
@@ -487,7 +498,7 @@ feature_names = artifacts["feature_names"]
 scaler        = artifacts["scaler"]
 y_test        = artifacts["y_test"]
 shap_values   = artifacts["shap_values"]
-shap_ev       = float(artifacts["shap_ev"][0])
+shap_ev       = float(np.ravel(artifacts["shap_ev"])[0])
 X_shap        = artifacts["X_shap"]
 best_tree_name = artifacts["shap_info"]["best_tree_name"]
 metrics_df    = pd.DataFrame(metrics_all).T
@@ -693,7 +704,7 @@ with tab2:
             textposition="outside", textfont=dict(color="#e2e8f0", size=12),
         ))
         fig.update_layout(**dark_layout("Customer Count by Churn Status", 360))
-        fig.update_yaxis(range=[0, vc["Count"].max() * 1.22])
+        fig.update_yaxes(range=[0, vc["Count"].max() * 1.22])
         st.plotly_chart(fig, use_container_width=True)
 
     with d2:
@@ -944,7 +955,7 @@ with tab3:
 
     # ── ROC Curves ─────────────────────────
     st.markdown('<div class="sec-hdr">📈 ROC Curves — All Models</div>', unsafe_allow_html=True)
-    y_test_arr = y_test.values
+    y_test_arr = np.array(y_test)
     fig_roc = go.Figure()
     for name, probs in test_probs.items():
         fpr, tpr, _ = roc_curve(y_test_arr, np.array(probs))
