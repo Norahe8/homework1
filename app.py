@@ -663,11 +663,16 @@ with tab4:
     )
 
     # ── Model Selector ─────────────────────
+    available_models = [
+        name for name in MODEL_FILES.keys()
+        if not (name == "Neural Network" and not KERAS_AVAILABLE)
+    ]
     sel_model = st.selectbox(
         "🤖 Select Model",
-        options=list(MODEL_FILES.keys()),
-        index=2,  # default: Random Forest
-        help="SHAP waterfall is available for Decision Tree, Random Forest, and XGBoost.",
+        options=available_models,
+        index=min(2, len(available_models) - 1),
+        help="SHAP waterfall is available for Decision Tree, Random Forest, and XGBoost."
+             + ("" if KERAS_AVAILABLE else " | Neural Network unavailable (TensorFlow not installed)."),
     )
 
     st.markdown("---")
