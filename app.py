@@ -610,8 +610,8 @@ with tab1:
                     f"Accuracy: {row['Accuracy']:.4f}<extra></extra>"
                 ),
             ))
+        fig_lb.update_layout(**dark_layout(height=310))
         fig_lb.update_layout(
-            **dark_layout(height=310),
             xaxis=dict(range=[0.7, 0.9], gridcolor="rgba(255,255,255,0.05)",
                        tickfont=dict(color="#64748b")),
             yaxis=dict(gridcolor="rgba(0,0,0,0)", tickfont=dict(color="#e2e8f0", size=12)),
@@ -962,13 +962,13 @@ with tab3:
     ))
     fig_roc.add_shape(type="rect", x0=0, y0=0, x1=1, y1=1,
                       fillcolor="rgba(124,58,237,0.02)", line_width=0)
+    fig_roc.update_layout(**dark_layout("ROC Curves — Receiver Operating Characteristic", 500,
+                      legend_pos=dict(x=0.55, y=0.1)))
     fig_roc.update_layout(
-        **dark_layout("ROC Curves — Receiver Operating Characteristic", 500,
-                      legend_pos=dict(x=0.55, y=0.1)),
         xaxis_title="False Positive Rate",
         yaxis_title="True Positive Rate",
-        xaxis=dict(range=[0, 1]),
-        yaxis=dict(range=[0, 1.02]),
+        xaxis_range=[0, 1],
+        yaxis_range=[0, 1.02],
     )
     st.plotly_chart(fig_roc, use_container_width=True)
     st.markdown("""
