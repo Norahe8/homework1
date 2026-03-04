@@ -882,6 +882,7 @@ with tab3:
     # ── Model Explanations ─────────────────
     st.markdown('<div class="sec-hdr">🧠 What Does Each Model Do? (Plain English)</div>',
                 unsafe_allow_html=True)
+    _purple = C["purple"]
     model_explain = {
         "Logistic Regression": (
             C["cyan"], "Baseline · Linear",
@@ -905,7 +906,7 @@ with tab3:
             C["purple"], "Tuned · State-of-the-Art",
             "Builds trees sequentially — each new tree specifically corrects the mistakes of the previous one. "
             "This 'gradient boosting' approach delivers top-tier performance and "
-            f"is the <strong style='color:{C[\"purple\"]}'>best model</strong> in this project (AUC {best_auc:.4f})."
+            f"is the <strong style='color:{_purple}'>best model</strong> in this project (AUC {best_auc:.4f})."
         ),
         "Neural Network": (
             C["red"], "Deep Learning · Keras",
