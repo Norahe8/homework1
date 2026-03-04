@@ -891,7 +891,7 @@ with tab2:
 with tab3:
 
     # ── Model Explanations ─────────────────
-    st.markdown('<div class="sec-hdr">🧠 What Does Each Model Do? (Plain English)</div>',
+    st.markdown('<div class="sec-hdr">🧠 What Does Each Model Do?</div>',
                 unsafe_allow_html=True)
     _purple = C["purple"]
     model_explain = {
